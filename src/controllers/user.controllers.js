@@ -9,7 +9,7 @@ export const createUser = async (req, res) => {
                 message: "Todos los campos (name, email, coins) son obligatorios"
             });
         }
-        const [row] = await pool.query("INSERT INTO users(name, email, coins) VALUES(?, ?, ?)",
+        const [row] = await pool.query("INSERT INTO clientes(name, email, coins) VALUES(?, ?, ?)",
             [name, email, coins]);
         res.json({
             id: row.insertId,
@@ -27,7 +27,7 @@ export const createUser = async (req, res) => {
 
 export const getUser = async (req, res) => {
     try {
-        const [rows] = await pool.query("SELECT * FROM users");
+        const [rows] = await pool.query("SELECT * FROM clientes");
 
         res.json(rows);
     } catch (error) {
@@ -41,7 +41,7 @@ export const getUser = async (req, res) => {
 
 export const getUserById = async (req, res) => {
     try {
-        const [rows] = await pool.query("SELECT * FROM users WHERE id = ?", [req.params.id]);
+        const [rows] = await pool.query("SELECT * FROM clientes WHERE id = ?", [req.params.id]);
 
         if (rows.length <= 0) {
             return res.status(404).json({
@@ -63,14 +63,14 @@ export const updateUser = async (req, res) => {
         const { id, name, email, coins } = req.body;
 
         // Verificar si el usuario existe antes de actualizar
-        const [existingRows] = await pool.query("SELECT * FROM users WHERE id = ?", [id]);
+        const [existingRows] = await pool.query("SELECT * FROM clientes WHERE id = ?", [id]);
         if (existingRows.length <= 0) {
             return res.status(404).json({
                 message: "Usuario no encontrado"
             });
         }
         // Actualizar el usuario
-        await pool.query("UPDATE users SET name=?, email=?, coins=? WHERE id=?",
+        await pool.query("UPDATE clientes SET name=?, email=?, coins=? WHERE id=?",
             [name, email, coins, id]);
 
         res.json({
@@ -95,7 +95,7 @@ export const deleteUser = async (req, res) => {
             });
         }
         // Eliminar el usuario
-        await pool.query("DELETE FROM users WHERE id = ?", [userId]);
+        await pool.query("DELETE FROM clientes WHERE id = ?", [userId]);
         res.json({
             message: "Usuario eliminado correctamente"
         });
