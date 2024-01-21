@@ -1,6 +1,6 @@
 import app from "./app.js"
 import {PORT} from "./config.js"
-import {cors} from "cors"
+import cors from "cors"
 
 // Configurar CORS
 app.use(cors({
