@@ -2,7 +2,6 @@ import app from "./app.js"
 import {PORT} from "./config.js"
 import cors from "cors"
 
-// Configurar CORS
 app.use(cors({
     origin: 'http://localhost:3000', // Permite solicitudes desde este dominio
     methods: 'POST', // Permite solicitudes POST
