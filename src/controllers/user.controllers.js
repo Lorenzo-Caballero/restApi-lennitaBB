@@ -2,15 +2,15 @@ import { pool } from "../db.js"
 
 export const createUser = async (req, res) => {
     try {
-        const { name, email, coins } = req.body;
+        const { name, email } = req.body;
         // Verificar si todos los campos necesarios están 
         if (!name || !email) {
             return res.status(400).json({
                 message: "Todos los campos (name, email) son obligatorios"
             });
         }
-        const [row] = await pool.query("INSERT INTO clientes(name, email, coins) VALUES(?, ?, ?)",
-            [name, email, coins]);
+        const [row] = await pool.query("INSERT INTO clientes(name, email) VALUES(?, ?)",
+            [name, email]);
         res.json({
             id: row.insertId,
             name,
@@ -60,7 +60,7 @@ export const getUserById = async (req, res) => {
 
 export const updateUser = async (req, res) => {
     try {
-        const { id, name, email, coins } = req.body;
+        const { id, name, email } = req.body;
 
         // Verificar si el usuario existe antes de actualizar
         const [existingRows] = await pool.query("SELECT * FROM clientes WHERE id = ?", [id]);
@@ -70,8 +70,8 @@ export const updateUser = async (req, res) => {
             });
         }
         // Actualizar el usuario
-        await pool.query("UPDATE clientes SET name=?, email=?, coins=? WHERE id=?",
-            [name, email, coins, id]);
+        await pool.query("UPDATE clientes SET name=?, email=?=? WHERE id=?",
+            [name, email, id]);
 
         res.json({
             message: "Usuario actualizado correctamente"
