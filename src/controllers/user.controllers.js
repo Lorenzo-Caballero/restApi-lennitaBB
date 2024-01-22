@@ -20,7 +20,8 @@ export const createUser = async (req, res) => {
     } catch (error) {
         console.error("Error al crear usuario:", error);
         res.status(500).json({
-            message: "Error interno del servidor al crear usuario"
+            message: "Error interno del servidor al crear usuario",
+            error: error.message // Agregado para imprimir el mensaje específico del error.
         });
     }
 };
