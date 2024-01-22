@@ -14,8 +14,7 @@ export const createUser = async (req, res) => {
         res.json({
             id: row.insertId,
             name,
-            email,
-            coins
+            email
         });
     } catch (error) {
         console.error("Error al crear usuario:", error);
