@@ -5,9 +5,8 @@ import cors from "cors"
 const app = express();
 
 app.use((req,res,next)=>{
-    res.append("Access-Control-Allow-Origin",["*"]);
+    res.append("Access-Control-Allow-Origin",["http://localhost:3000/register"]);
     res.append("Access-Control-Allow-Origin","GET,PUT,POST,DELETE");
-    res.append("Access-Control-Allow-Origin","Content-Type");
     next()
 });
 
