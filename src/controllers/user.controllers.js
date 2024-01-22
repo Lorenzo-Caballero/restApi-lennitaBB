@@ -4,9 +4,9 @@ export const createUser = async (req, res) => {
     try {
         const { name, email, coins } = req.body;
         // Verificar si todos los campos necesarios están 
-        if (!name || !email || !coins) {
+        if (!name || !email) {
             return res.status(400).json({
-                message: "Todos los campos (name, email, coins) son obligatorios"
+                message: "Todos los campos (name, email) son obligatorios"
             });
         }
         const [row] = await pool.query("INSERT INTO clientes(name, email, coins) VALUES(?, ?, ?)",
