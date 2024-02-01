@@ -1,9 +1,12 @@
 // Importa los paquetes necesarios
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
+import {config} from "dotenv"
+
+config()
 
 // Controlador para el inicio de sesión
-export const login = async (req, res) => {
+export const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     // Busca el usuario en la base de datos por su correo electrónico
@@ -16,7 +19,7 @@ export const login = async (req, res) => {
     }
 
     // Genera un token JWT
-    const token = jwt.sign({ id: user.id, email: user.email }, 'secret_key', { expiresIn: '1h' });
+    const token = jwt.sign({ id: user.id, email: user.email },process.env.JWT_KEY, { expiresIn: '1h' });
 
     // Envía el token JWT al cliente como respuesta
     res.json({ token });
