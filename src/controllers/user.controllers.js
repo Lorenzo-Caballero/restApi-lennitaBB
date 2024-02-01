@@ -1,28 +1,21 @@
-import { pool } from "../db.js";
-import bcrypt from "bcrypt";
+import { pool } from "../db.js"
 
 export const createUser = async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        const { name, email ,password} = req.body;
         // Verificar si todos los campos necesarios están 
-        if (!name || !email || !password) {
+        if (!name || !email) {
             return res.status(400).json({
-                message: "Todos los campos (name, email, password) son obligatorios"
+                message: "Todos los campos (name, email) son obligatorios"
             });
         }
-        
-        // Hashear la contraseña antes de almacenarla en la base de datos
-        const hashedPassword = await bcrypt.hash(password, 10);
-        
-        // Insertar el usuario en la base de datos con la contraseña hasheada
-        const [row] = await pool.query("INSERT INTO clientes(name, email, password) VALUES(?, ?, ?)",
-            [name, email, hashedPassword]);
-        
-        // Enviar la respuesta al cliente
+        const [row] = await pool.query("INSERT INTO clientes(name, email,password) VALUES(?, ?, ?)",
+            [name, email,password]);
         res.json({
             id: row.insertId,
             name,
-            email
+            email,
+            password
         });
     } catch (error) {
         console.error("Error al crear usuario:", error);
