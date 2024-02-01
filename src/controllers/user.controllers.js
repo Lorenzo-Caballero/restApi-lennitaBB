@@ -9,13 +9,15 @@ export const createUser = async (req, res) => {
                 message: "Todos los campos (name, email) son obligatorios"
             });
         }
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         const [row] = await pool.query("INSERT INTO clientes(name, email,password) VALUES(?, ?, ?)",
-            [name, email,password]);
+            [name, email,hashedPassword]);
         res.json({
             id: row.insertId,
             name,
             email,
-            password
+            hashedPassword
         });
     } catch (error) {
         console.error("Error al crear usuario:", error);
