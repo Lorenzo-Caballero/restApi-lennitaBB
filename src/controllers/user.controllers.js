@@ -1,16 +1,17 @@
 import { pool } from "../db.js"
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 
 export const createUser = async (req, res) => {
     try {
-        const { name, email } = req.body;
-        // Verificar si todos los campos necesarios están 
-        if (!name || !email) {
-            return res.status(400).json({
-                message: "Todos los campos (name, email) son obligatorios"
-            });
-        }
-        const [row] = await pool.query("INSERT INTO clientes(name, email) VALUES(?, ?)",
-            [name, email]);
+        const { name, email, password } = req.body;
+        const hashedPassword = bcrypt.hashSync(password, 10); // Hashea la contraseña
+
+        // Inserta el usuario en la base de datos con la contraseña hasheada
+        const [row] = await pool.query("INSERT INTO clientes(name, email, password) VALUES(?, ?, ?)",
+            [name, email, hashedPassword]);
+        
+        // Envía la respuesta al cliente
         res.json({
             id: row.insertId,
             name,
@@ -20,7 +21,7 @@ export const createUser = async (req, res) => {
         console.error("Error al crear usuario:", error);
         res.status(500).json({
             message: "Error interno del servidor al crear usuario",
-            error: error.message // Agregado para imprimir el mensaje específico del error.
+            error: error.message
         });
     }
 };
