@@ -2,16 +2,15 @@ import express from "express";
 import usersRoutes from "./routes/users.routes.js"
 import designsRoutes from "./routes/designs.routes.js"
 import indexRoutes from "./routes/index.routes.js"
+import cors from "cors"
 
 const app = express();
 
 // Middleware para habilitar CORS
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
-    res.header("Access-Control-Allow-Headers", "Content-Type");
-    next();
-});
+app.use(cors());
+
+// Middleware para permitir solicitudes preflight OPTIONS
+app.options('*', cors());
 
 app.use(express.json())
 
