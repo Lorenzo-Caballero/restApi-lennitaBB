@@ -2,7 +2,8 @@ import express from "express";
 import usersRoutes from "./routes/users.routes.js"
 import designsRoutes from "./routes/designs.routes.js"
 import indexRoutes from "./routes/index.routes.js"
-import cors from "cors"
+const cors = require("cors");
+const bodyParser = require('body-parser');
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(cors());
 
 // Middleware para permitir solicitudes preflight OPTIONS
 app.options('*', cors());
+app.use(bodyParser.text({ type: 'application/json' })); // to support JSON-encoded bodies (express-validator)
 
 app.use(express.json())
 
