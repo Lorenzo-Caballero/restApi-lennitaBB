@@ -4,6 +4,7 @@ import designsRoutes from "./routes/designs.routes.js"
 import indexRoutes from "./routes/index.routes.js"
 import cors from "cors"
 const app = express();
+app.use(cors());
 
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
