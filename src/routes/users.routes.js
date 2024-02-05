@@ -6,7 +6,7 @@ router.get("/clientes", getUser)
 
 router.get("/clientes/:id", getUserById)
 
-router.post("/login", loginUser)
+router.post("/clientes/login", loginUser)
 
 router.post("/clientes", createUser)
 
