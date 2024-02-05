@@ -1,9 +1,9 @@
 import { pool } from "../db.js"
 import bcrypt from 'bcryptjs';
-
+import jwt from 'jsonwebtoken';
 export const createUser = async (req, res) => {
     try {
-        const { name, email ,password} = req.body;
+        const { name, email, password } = req.body;
         // Verificar si todos los campos necesarios están 
         if (!name || !email) {
             return res.status(400).json({
@@ -13,7 +13,7 @@ export const createUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const [row] = await pool.query("INSERT INTO clientes(name, email,password) VALUES(?, ?, ?)",
-            [name, email,hashedPassword]);
+            [name, email, hashedPassword]);
         res.json({
             id: row.insertId,
             name,
@@ -88,6 +88,58 @@ export const updateUser = async (req, res) => {
     }
 };
 
+
+// Método para el login de usuarios
+export const loginUser = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // Verificar si todos los campos necesarios están presentes
+        if (!email || !password) {
+            return res.status(400).json({
+                message: "Los campos email y password son obligatorios"
+            });
+        }
+
+        // Verificar si el usuario existe en la base de datos
+        const [rows] = await pool.query("SELECT * FROM clientes WHERE email = ?", [email]);
+
+        if (rows.length === 0) {
+            return res.status(404).json({
+                message: "Usuario no encontrado"
+            });
+        }
+
+        const user = rows[0];
+
+        // Verificar la contraseña
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        if (!passwordMatch) {
+            return res.status(401).json({
+                message: "Credenciales incorrectas"
+            });
+        }
+
+        // Generar token de autenticación
+        const token = jwt.sign(
+            { userId: user.id, email: user.email },
+            process.env.JWT_KEY, // Deberías tener una clave secreta para firmar el token
+            { expiresIn: '1h' } // El token expira en 1 hora, puedes ajustar este valor según tus necesidades
+        );
+
+        res.json({
+            message: "Login exitoso",
+            token
+        });
+
+    } catch (error) {
+        console.error("Error en el login:", error);
+        res.status(500).json({
+            message: "Error interno del servidor en el login"
+        });
+    }
+};
 export const deleteUser = async (req, res) => {
     try {
         const userId = req.params.id;
