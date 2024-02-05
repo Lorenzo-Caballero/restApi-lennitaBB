@@ -2,7 +2,7 @@ import express from "express";
 import usersRoutes from "./routes/users.routes.js"
 import designsRoutes from "./routes/designs.routes.js"
 import indexRoutes from "./routes/index.routes.js"
-const cors = require("cors");
+import cors from "cors"
 const bodyParser = require('body-parser');
 
 const app = express();
