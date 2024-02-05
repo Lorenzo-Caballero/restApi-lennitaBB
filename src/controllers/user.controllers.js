@@ -124,10 +124,15 @@ export const loginUser = async (req, res) => {
             { expiresIn: '1h' }
         );
 
-        res.json({
-            message: "Login exitoso",
-            token
-        });
+      // Obtener la información completa del usuario
+      const userInfo = await getUserById({ params: { id: user.insertId } });
+
+      res.json({
+          message: "Login exitoso",
+          token,
+          user: userInfo // Devolver información del usuario
+      });
+
 
     } catch (error) {
         console.error("Error en el login:", error);
