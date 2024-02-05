@@ -106,7 +106,6 @@ export const loginUser = async (req, res) => {
             });
         }
 
-
         const user = rows[0];
         console.log("user",user)
         const passwordMatch = await bcrypt.compare(password, user.password);
@@ -117,7 +116,7 @@ export const loginUser = async (req, res) => {
             });
         }
         const token = jwt.sign(
-            { userId: rows.insertId, email: user.email },
+            { userId: user.insertId, email: user.email },
             process.env.JWT_KEY, // Deberías tener una clave secreta para firmar el token
             { expiresIn: '1h' } // El token expira en 1 hora, puedes ajustar este valor según tus necesidades
         );
@@ -130,10 +129,12 @@ export const loginUser = async (req, res) => {
     } catch (error) {
         console.error("Error en el login:", error);
         res.status(500).json({
-            message: "Error interno del servidor en el login"
+            message: "Error interno del servidor en el login",
+            res
         });
     }
 };
+
 export const deleteUser = async (req, res) => {
     try {
         const userId = req.params.id;
