@@ -106,9 +106,11 @@ export const loginUser = async (req, res) => {
             });
         }
 
-        const user = rows[0];
-        const passwordMatch = await bcrypt.compare(password, user.password);
 
+        const user = rows[0];
+        console.log("user",user)
+        const passwordMatch = await bcrypt.compare(password, user.password);
+            console.log("password",passwordMatch)
         if (!passwordMatch) {
             return res.status(401).json({
                 message: "Credenciales incorrectas"
