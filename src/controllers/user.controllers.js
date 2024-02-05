@@ -89,19 +89,15 @@ export const updateUser = async (req, res) => {
 };
 
 
-// Método para el login de usuarios
 export const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Verificar si todos los campos necesarios están presentes
         if (!email || !password) {
             return res.status(400).json({
                 message: "Los campos email y password son obligatorios"
             });
         }
-
-        // Verificar si el usuario existe en la base de datos
         const [rows] = await pool.query("SELECT * FROM clientes WHERE email = ?", [email]);
 
         if (rows.length === 0) {
@@ -111,8 +107,6 @@ export const loginUser = async (req, res) => {
         }
 
         const user = rows[0];
-
-        // Verificar la contraseña
         const passwordMatch = await bcrypt.compare(password, user.password);
 
         if (!passwordMatch) {
@@ -120,10 +114,8 @@ export const loginUser = async (req, res) => {
                 message: "Credenciales incorrectas"
             });
         }
-
-        // Generar token de autenticación
         const token = jwt.sign(
-            { userId: user.id, email: user.email },
+            { userId: rows.insertId, email: user.email },
             process.env.JWT_KEY, // Deberías tener una clave secreta para firmar el token
             { expiresIn: '1h' } // El token expira en 1 hora, puedes ajustar este valor según tus necesidades
         );
