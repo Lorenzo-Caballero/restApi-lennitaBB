@@ -1,6 +1,9 @@
 import { pool } from "../db.js"
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import {config} from "dotenv"
+
+config()
 export const createUser = async (req, res) => {
     try {
         const { name, email, password } = req.body;
@@ -117,8 +120,8 @@ export const loginUser = async (req, res) => {
         }
         const token = jwt.sign(
             { userId: user.insertId, email: user.email },
-            process.env.JWT_KEY, // Deberías tener una clave secreta para firmar el token
-            { expiresIn: '1h' } // El token expira en 1 hora, puedes ajustar este valor según tus necesidades
+            process.env.JWT_KEY, // Utiliza process.env.JWT_KEY para acceder al secreto JWT
+            { expiresIn: '1h' }
         );
 
         res.json({
