@@ -120,7 +120,8 @@ export const loginUser = async (req, res) => {
         }
         const token = jwt.sign(
             { userId: user.insertId, email: user.email },
-            process.env.JWT_KEY, // Utiliza process.env.JWT_KEY para acceder al secreto JWT
+            process.env.JWT_KEY,
+            process.env.API-KEY-AI , // Utiliza process.env.JWT_KEY para acceder al secreto JWT
             { expiresIn: '1h' }
         );
 
