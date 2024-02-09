@@ -2,12 +2,12 @@ import { pool } from "../db.js"
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import {config} from "dotenv"
-
+import { useDispatch } from 'react-redux';
+import { loginSuccess } from './authReducer';
 config()
 export const createUser = async (req, res) => {
     try {
         const { name, email, password } = req.body;
-        // Verificar si todos los campos necesarios están 
         if (!name || !email) {
             return res.status(400).json({
                 message: "Todos los campos (name, email) son obligatorios"
@@ -95,6 +95,7 @@ export const updateUser = async (req, res) => {
 export const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
+        const dispatch = useDispatch();
 
         if (!email || !password) {
             return res.status(400).json({
@@ -108,9 +109,7 @@ export const loginUser = async (req, res) => {
                 message: "Usuario no encontrado"
             });
         }
-
         const user = rows[0];
-        console.log("user",user)
         const passwordMatch = await bcrypt.compare(password, user.password);
             console.log("password",passwordMatch)
         if (!passwordMatch) {
@@ -123,6 +122,7 @@ export const loginUser = async (req, res) => {
             process.env.JWT_KEY, // Utiliza process.env.JWT_KEY para acceder al secreto JWT
             { expiresIn: '1h' }
         );
+        dispatch(loginSuccess(user, token));
 
         res.json({
             message: "Login exitoso",
