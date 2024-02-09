@@ -1,6 +1,6 @@
 import { pool } from "../db.js";
 import {config} from "dotenv"
-import {KEY_AI}from "./config.js"
+import {KEY_AI}from "../config.js"
 
 config()
 export const ping =async (req, res) => {
