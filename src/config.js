@@ -1,7 +1,7 @@
 import {config} from "dotenv"
 
 config()
-export const KEY_AI = process.env.KEY_AI;
+export const KEY_AI = process.env.API-KEY-AI;
 export const PORT = process.env.PORT || 4000
 export const DB_USER = process.env.DB_USER ||"root"
 export const DB_PASSWORD = process.env.DB_PASSWORD || "Programacion123"
