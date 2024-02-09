@@ -127,8 +127,7 @@ export const loginUser = async (req, res) => {
         res.json({
             message: "Login exitoso",
             email:user.email,
-            token,
-            api:process.env.API-KEY-AI
+            token
         });
 
     } catch (error) {

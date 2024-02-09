@@ -5,6 +5,6 @@ config()
 
 
 export const ping =async (req, res) => {
-  const KEY_AI = process.env.API-KEY-AI;
+  const KEY_AI = process.env.API_KEY_AI;
   return  res.json(KEY_AI)
 }
