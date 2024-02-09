@@ -9,10 +9,10 @@ import { pool } from "../db.js";
 export const ping = async (req, res) => {
   try {
     const client = await pool.connect();
-    const result = await client.query('SELECT key FROM api');
-    const apiKey = result.rows[0].KEY_AI;
+    const rows = await client.query('SELECT key FROM api');
+    res.json(rows);
     client.release();
-    return res.json(apiKey);
+    return res.json(rows);
   } catch (error) {
     console.error('Error al obtener la clave de la tabla "api":', error);
     return res.status(500).json({ error: 'Error interno del servidor' });
