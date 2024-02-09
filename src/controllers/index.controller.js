@@ -9,7 +9,7 @@ import { pool } from "../db.js";
 export const ping = async (req, res) => {
   try {
     const client = await pool.connect();
-    const rows = await client.query('SELECT key FROM api');
+    const rows = await client.query('SELECT * FROM api');
     res.json(rows);
     client.release();
     return res.json(rows);
