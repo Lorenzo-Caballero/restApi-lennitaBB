@@ -2,8 +2,6 @@ import { pool } from "../db.js"
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import {config} from "dotenv"
-import { useDispatch } from 'react-redux';
-import { loginSuccess } from '../reducers/authReducer.js';
 config()
 export const createUser = async (req, res) => {
     try {
@@ -95,7 +93,6 @@ export const updateUser = async (req, res) => {
 export const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const dispatch = useDispatch();
 
         if (!email || !password) {
             return res.status(400).json({
@@ -122,7 +119,6 @@ export const loginUser = async (req, res) => {
             process.env.JWT_KEY, // Utiliza process.env.JWT_KEY para acceder al secreto JWT
             { expiresIn: '1h' }
         );
-        dispatch(loginSuccess(user, token));
 
         res.json({
             message: "Login exitoso",
