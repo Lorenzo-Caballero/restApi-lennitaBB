@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import {config} from "dotenv"
 import { useDispatch } from 'react-redux';
-import { loginSuccess } from './authReducer';
+import { loginSuccess } from '../reducers/authReducer.js';
 config()
 export const createUser = async (req, res) => {
     try {

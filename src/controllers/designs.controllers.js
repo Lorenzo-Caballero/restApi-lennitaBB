@@ -2,14 +2,14 @@ import { pool } from "../db.js"
 
 export const createDesigns = async (req, res) => {
     try {
-        const { name, price ,image} = req.body;
-        if (!name || !price|| !image) {
+        const { name, price, image } = req.body;
+        if (!name || !price || !image) {
             return res.status(400).json({
                 massage: "Todos los campos son obligatorios!"
             });
         }
         const [row] = await pool.query("INSERT INTO designs (name , price,image) VALUES (?, ?, ?)",
-            [name, price,image]);
+            [name, price, image]);
         res.json({
             id: row.insertId,
             name,
