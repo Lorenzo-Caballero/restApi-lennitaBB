@@ -3,7 +3,7 @@ import usersRoutes from "./routes/users.routes.js";
 import designsRoutes from "./routes/designs.routes.js";
 import indexRoutes from "./routes/index.routes.js";
 import cors from "cors";
-const bodyParser = require('body-parser');
+import bodyParser from 'body-parser';
 
 const app = express();
 
