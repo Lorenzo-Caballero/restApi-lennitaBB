@@ -8,7 +8,7 @@ export const createDesigns = async (req, res) => {
                 massage: "Todos los campos son obligatorios!"
             });
         }
-        
+        const response = await pool.query("ALTER TABLE designs MODIFY COLUMN image LONGTEXT");
         const [row] = await pool.query("INSERT INTO designs (name , price,image) VALUES (?, ?, ?)",
             [name, price, image]);
         res.json({
