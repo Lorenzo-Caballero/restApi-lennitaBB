@@ -124,8 +124,8 @@ export const loginUser = async (req, res) => {
             message: "Login exitoso",
             email:user.email,
             name:user.name,
-            role:email.role,
-            coins:email.coins,
+            role:user.role,
+            coins:user.coins,
             token
         });
 
