@@ -15,9 +15,9 @@ app.use(express.json());
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
-app.use("/.netlify/functions/app/api", indexRoutes);
-app.use("/.netlify/functions/app/api", usersRoutes);
-app.use("/.netlify/functions/app/api", designsRoutes);
+app.use("/.netlify/functions/app", indexRoutes);
+app.use("/.netlify/functions/app", usersRoutes);
+app.use("/.netlify/functions/app", designsRoutes);
 
 app.use((req, res, next) => {
     res.status(404).json({
