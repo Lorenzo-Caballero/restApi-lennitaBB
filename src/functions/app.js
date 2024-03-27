@@ -1,14 +1,14 @@
 import express from "express";
-import usersRoutes from "./routes/users.routes.js";
-import designsRoutes from "./routes/designs.routes.js";
-import indexRoutes from "./routes/index.routes.js";
+import usersRoutes from "..users.routes.js";
+import designsRoutes from "../routes/designs.routes.js";
+import indexRoutes from "../routes/index.routes.js";
 import cors from "cors";
 import serverless from "serverless-http";
 import bodyParser from 'body-parser';
 
 const app = express();
 
-// Middleware para habilitar CORS permitiendo solicitudes desde cualquier origen
+// Middleware para habilitar CORS permitiendo solicitudes desde "cualquier origen
 app.use(cors());
 
 app.use(express.json());
