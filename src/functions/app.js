@@ -1,7 +1,7 @@
 import express from "express";
-import usersRoutes from "./routes/users.routes.js";
-import designsRoutes from "./routes/designs.routes.js";
-import indexRoutes from "./routes/index.routes.js";
+import usersRoutes from "../routes/users.routes.js";
+import designsRoutes from "../routes/designs.routes.js";
+import indexRoutes from "../routes/index.routes.js";
 import cors from "cors";
 import bodyParser from 'body-parser';
 
