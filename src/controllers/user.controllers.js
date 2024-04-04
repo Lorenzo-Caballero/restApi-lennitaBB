@@ -16,7 +16,7 @@ export const createUser = async (req, res) => {
         const [row] = await pool.query("INSERT INTO clientes(name, email,password) VALUES(?, ?, ?)",
             [name, email, hashedPassword]);
         res.json({
-            id: row.insertId,
+            id_client: row.insertId,
             name,
             email,
             hashedPassword
@@ -46,7 +46,7 @@ export const getUser = async (req, res) => {
 
 export const getUserById = async (req, res) => {
     try {
-        const [rows] = await pool.query("SELECT * FROM clientes WHERE id = ?", [req.params.id]);
+        const [rows] = await pool.query("SELECT * FROM clientes WHERE id = ?", [req.params.id_client]);
 
         if (rows.length <= 0) {
             return res.status(404).json({
@@ -68,7 +68,7 @@ export const updateUser = async (req, res) => {
         const { id, name, email } = req.body;
 
         // Verificar si el usuario existe antes de actualizar
-        const [existingRows] = await pool.query("SELECT * FROM clientes WHERE id = ?", [id]);
+        const [existingRows] = await pool.query("SELECT * FROM clientes WHERE id_client = ?", [id]);
         if (existingRows.length <= 0) {
             return res.status(404).json({
                 message: "Usuario no encontrado"
@@ -142,14 +142,14 @@ export const deleteUser = async (req, res) => {
     try {
         const userId = req.params.id;
         // Verifica si el usuario existe antes de eliminar
-        const [existingRows] = await pool.query("SELECT * FROM users WHERE id = ?", [userId]);
+        const [existingRows] = await pool.query("SELECT * FROM users WHERE id_client = ?", [userId]);
         if (existingRows.length <= 0) {
             return res.status(404).json({
                 message: "Usuario no encontrado"
             });
         }
         // Eliminar el usuario
-        await pool.query("DELETE FROM clientes WHERE id = ?", [userId]);
+        await pool.query("DELETE FROM clientes WHERE id_client = ?", [userId]);
         res.json({
             message: "Usuario eliminado correctamente"
         });
