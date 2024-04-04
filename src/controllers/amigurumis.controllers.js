@@ -2,7 +2,9 @@ import { pool } from "../db.js"
 
 export const createamigurumis = async (req, res) => {
     try {
-        const { name, price, image } = req.body;
+        const { name, price } = req.body;
+        const image = req.file.path; // Obtiene la ruta del archivo de imagen subido
+
         if (!name || !price || !image) {
             return res.status(400).json({
                 massage: "Todos los campos son obligatorios"
@@ -20,10 +22,9 @@ export const createamigurumis = async (req, res) => {
         console.log("che salio re mal la creacion del diseño", error);
         res.status(500).json({
             massage: "Error interno del servidor al crear el diseño",
-            error: error.massage
+            error: error.message
         });
     }
-
 };
 
 export const getamigurumis = async (req, res) => {
