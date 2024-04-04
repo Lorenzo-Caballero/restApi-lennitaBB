@@ -5,7 +5,7 @@ export const createamigurumis = async (req, res) => {
         const { name, price, image } = req.body;
         if (!name || !price || !image) {
             return res.status(400).json({
-                massage: "Todos los campos son obligatorios!"
+                massage: "Todos los campos son obligatorios"
             });
         }
         const [row] = await pool.query("INSERT INTO amigurumis (name , price,image) VALUES (?, ?, ?)",
