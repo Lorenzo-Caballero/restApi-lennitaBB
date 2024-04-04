@@ -2,7 +2,7 @@ import express from "express";
 import usersRoutes from "../routes/users.routes.js";
 import designsRoutes from "../routes/designs.routes.js";
 import indexRoutes from "../routes/index.routes.js";
-import amigurumisRoutes from "../routes/amigurumis.routes.js"
+import amigurumisRoutes from "../routes/amigurumis.routes.js";
 import cors from "cors";
 import bodyParser from 'body-parser';
 
