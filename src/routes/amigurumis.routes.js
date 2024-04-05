@@ -7,7 +7,6 @@ router.get("/amigurumis", getamigurumis)
 
 router.get("/amigurumis/:id", getamigurumisById)
 
-
 router.post("/amigurumis",  upload.single('image'),createamigurumis)
 
 router.put("/amigurumis/:id", updateamigurumis)

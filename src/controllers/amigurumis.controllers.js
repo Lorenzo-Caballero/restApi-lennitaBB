@@ -3,7 +3,7 @@ import { pool } from "../db.js"
 export const createamigurumis = async (req, res) => {
     try {
         const { name, price } = req.body;
-        const image = req.file.path; // Obtiene la ruta del archivo de imagen subido
+        const image = req.file.path;
 
         if (!name || !price || !image) {
             return res.status(400).json({
