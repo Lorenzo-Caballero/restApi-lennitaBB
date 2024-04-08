@@ -1,29 +1,52 @@
-import { pool } from "../db.js"
+import sharp from 'sharp';
+import { pool } from "../db.js";
 
 export const createamigurumis = async (req, res) => {
     try {
         const { name, price } = req.body;
-        const image = req.file.path;
+        let { image } = req.body;
 
         if (!name || !price || !image) {
             return res.status(400).json({
-                massage: "Todos los campos son obligatorios"
+                message: "Todos los campos son obligatorios!"
             });
         }
-        const [row] = await pool.query("INSERT INTO amigurumis (name , price,image) VALUES (?, ?, ?)",
-            [name, price, image]);
+
+        // Reducir el tamaño de la imagen
+        const compressedImage = await compressImage(image);
+        
+        // Guardar la imagen comprimida en la base de datos
+        const [row] = await pool.query("INSERT INTO amigurumis (name, price, image) VALUES (?, ?, ?)", [name, price, compressedImage]);
+
         res.json({
             id: row.insertId,
             name,
-            image,
+            image: compressedImage,
             price
         });
     } catch (error) {
-        console.log("che salio re mal la creacion del diseño", error);
+        console.log("Error al crear el diseño:", error);
         res.status(500).json({
-            massage: "Error interno del servidor al crear el diseño",
+            message: "Error interno del servidor al crear el diseño",
             error: error.message
         });
+    }
+};
+
+// Función para comprimir la imagen utilizando sharp
+const compressImage = async (image) => {
+    try {
+        // Procesar la imagen con sharp y reducir la calidad
+        const compressedImageBuffer = await sharp(Buffer.from(image, 'base64'))
+            .jpeg({ quality: 70 }) // Reducir la calidad al 70%
+            .toBuffer();
+
+        // Convertir la imagen comprimida a una cadena base64
+        const compressedImage = compressedImageBuffer.toString('base64');
+
+        return compressedImage;
+    } catch (error) {
+        throw new Error("Error al comprimir la imagen");
     }
 };
 
