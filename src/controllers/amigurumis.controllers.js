@@ -1,55 +1,30 @@
-import sharp from 'sharp';
 import { pool } from "../db.js";
 
-export const createamigurumis = async (req, res) => {
+export const createAmigurumi = async (req, res) => {
     try {
-        const { name, price } = req.body;
-        let { image } = req.body;
-
+        const { name, price, image } = req.body;
         if (!name || !price || !image) {
             return res.status(400).json({
-                message: "Todos los campos son obligatorios!"
+                massage: "Todos los campos son obligatorios!"
             });
         }
-
-        // Reducir el tamaño de la imagen
-        const compressedImage = await compressImage(image);
-        
-        // Guardar la imagen comprimida en la base de datos
-        const [row] = await pool.query("INSERT INTO amigurumis (name, price, image) VALUES (?, ?, ?)", [name, price, compressedImage]);
-
+        const [row] = await pool.query("INSERT INTO amigurumis (name , price,image) VALUES (?, ?, ?)",
+            [name, price, image]);
         res.json({
             id: row.insertId,
             name,
-            image: compressedImage,
+            image,
             price
         });
     } catch (error) {
-        console.log("Error al crear el diseño:", error);
+        console.log("che salio re mal la creacion del amigurumi", error);
         res.status(500).json({
-            message: "Error interno del servidor al crear el diseño",
-            error: error.message
+            massage: "Error interno del servidor al crear el amigurumi",
+            error: error.massage
         });
     }
+
 };
-
-// Función para comprimir la imagen utilizando sharp
-const compressImage = async (image) => {
-    try {
-        // Procesar la imagen con sharp y reducir la calidad
-        const compressedImageBuffer = await sharp(Buffer.from(image, 'base64'))
-            .jpeg({ quality: 70 }) // Reducir la calidad al 70%
-            .toBuffer();
-
-        // Convertir la imagen comprimida a una cadena base64
-        const compressedImage = compressedImageBuffer.toString('base64');
-
-        return compressedImage;
-    } catch (error) {
-        throw new Error("Error al comprimir la imagen");
-    }
-};
-
 export const getamigurumis = async (req, res) => {
     try {
         const [rows] = await pool.query("SELECT * FROM amigurumis");
