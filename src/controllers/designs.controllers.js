@@ -109,7 +109,7 @@ export const updatedesigns = async (req, res) => {
     }
 };
 
-export const deletedesigns = async (req, res) => {
+export const deleteDesigns = async (req, res) => {
     try {
         const designsId = req.params.id;
         const [existingRows] = await pool.query("SELECT * FROM designs WHERE id = ?", [designsId]);
