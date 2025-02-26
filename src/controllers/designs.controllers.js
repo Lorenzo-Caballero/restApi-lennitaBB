@@ -64,7 +64,7 @@ export const getDesigns = async (req, res) => {
 };
 
 
-export const getdesignsById = async (req, res) => {
+export const getDesignsById = async (req, res) => {
     try {
         const [rows] = await pool.query("SELECT * FROM designs WHERE id = ?", [req.params.id]);
 
