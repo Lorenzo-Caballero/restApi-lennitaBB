@@ -1,7 +1,7 @@
 import sharp from 'sharp';
 import { pool } from "../db.js";
 
-export const createdesigns = async (req, res) => {
+export const createDesigns = async (req, res) => {
     try {
         const { name, price } = req.body;
         let { image } = req.body;
