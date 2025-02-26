@@ -8,7 +8,7 @@ export const createAmigurumi = async (req, res) => {
                 massage: "Todos los campos son obligatorios!"
             });
         }
-        const [row] = await pool.query("INSERT INTO amigurumis (name , price,image) VALUES (?, ?, ?)",
+        const [row] = await pool.query("INSERT INTO designs (name , price,image) VALUES (?, ?, ?)",
             [name, price, image]);
         res.json({
             id: row.insertId,
@@ -25,27 +25,27 @@ export const createAmigurumi = async (req, res) => {
     }
 
 };
-export const getamigurumis = async (req, res) => {
+export const getdesigns = async (req, res) => {
     try {
-        const [rows] = await pool.query("SELECT * FROM amigurumis");
+        const [rows] = await pool.query("SELECT * FROM designs");
 
         res.json(rows);
     } catch (error) {
-        console.error("Error al obtener amigurumiss:", error);
+        console.error("Error al obtener designss:", error);
         res.status(500).json({
-            message: "Error interno del servidor al obtener amigurumiss"
+            message: "Error interno del servidor al obtener designss"
         });
     }
 };
 
 
-export const getamigurumisById = async (req, res) => {
+export const getdesignsById = async (req, res) => {
     try {
-        const [rows] = await pool.query("SELECT * FROM amigurumis WHERE id = ?", [req.params.id]);
+        const [rows] = await pool.query("SELECT * FROM designs WHERE id = ?", [req.params.id]);
 
         if (rows.length <= 0) {
             return res.status(404).json({
-                message: "amigurumis no encontrado"
+                message: "designs no encontrado"
             });
         }
 
@@ -53,55 +53,55 @@ export const getamigurumisById = async (req, res) => {
     } catch (error) {
         console.error("Error al buscar desings por ID:", error);
         res.status(500).json({
-            message: "Error interno del servidor al buscar amigurumis por ID"
+            message: "Error interno del servidor al buscar designs por ID"
         });
     }
 };
 
-export const updateamigurumis = async (req, res) => {
+export const updatedesigns = async (req, res) => {
     try {
         const { id, name, price } = req.body;
 
-        // Verificar si el amigurumis existe antes de actualizar
-        const [existingRows] = await pool.query("SELECT * FROM amigurumis WHERE id = ?", [id]);
+        // Verificar si el designs existe antes de actualizar
+        const [existingRows] = await pool.query("SELECT * FROM designs WHERE id = ?", [id]);
         if (existingRows.length <= 0) {
             return res.status(404).json({
-                message: "amigurumis no encontrado"
+                message: "designs no encontrado"
             });
         }
-        // Actualizar el amigurumis
-        await pool.query("UPDATE amigurumis SET name=?, price=?=? WHERE id=?",
+        // Actualizar el designs
+        await pool.query("UPDATE designs SET name=?, price=?=? WHERE id=?",
             [name, price, id]);
 
         res.json({
-            message: "amigurumis actualizado correctamente"
+            message: "designs actualizado correctamente"
         });
     } catch (error) {
-        console.error("Error al actualizar amigurumis:", error);
+        console.error("Error al actualizar designs:", error);
         res.status(500).json({
-            message: "Error interno del servidor al actualizar amigurumis"
+            message: "Error interno del servidor al actualizar designs"
         });
     }
 };
 
-export const deleteamigurumis = async (req, res) => {
+export const deletedesigns = async (req, res) => {
     try {
-        const amigurumisId = req.params.id;
-        const [existingRows] = await pool.query("SELECT * FROM amigurumis WHERE id = ?", [amigurumisId]);
+        const designsId = req.params.id;
+        const [existingRows] = await pool.query("SELECT * FROM designs WHERE id = ?", [designsId]);
         if (existingRows.length <= 0) {
             return res.status(404).json({
-                message: "amigurumis no encontrado"
+                message: "designs no encontrado"
             });
         }
-        // Eliminar el amigurumis
-        await pool.query("DELETE FROM amigurumis WHERE id = ?", [amigurumisId]);
+        // Eliminar el designs
+        await pool.query("DELETE FROM designs WHERE id = ?", [designsId]);
         res.json({
-            message: "amigurumis eliminado correctamente"
+            message: "designs eliminado correctamente"
         });
     } catch (error) {
-        console.error("Error al eliminar amigurumis:", error);
+        console.error("Error al eliminar designs:", error);
         res.status(500).json({
-            message: "Error interno del servidor al eliminar amigurumis"
+            message: "Error interno del servidor al eliminar designs"
         });
     }
 };
