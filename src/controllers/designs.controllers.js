@@ -83,7 +83,7 @@ export const getDesignsById = async (req, res) => {
     }
 };
 
-export const updatedesigns = async (req, res) => {
+export const updateDesigns = async (req, res) => {
     try {
         const { id, name, price } = req.body;
 
