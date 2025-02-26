@@ -2,7 +2,6 @@ import express from "express";
 import usersRoutes from "../routes/users.routes.js";
 import designsRoutes from "../routes/designs.routes.js";
 import indexRoutes from "../routes/index.routes.js";
-import amigurumisRoutes from "../routes/amigurumis.routes.js";
 import cors from "cors";
 import bodyParser from 'body-parser';
 
@@ -16,7 +15,6 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 app.use("/api", indexRoutes);
 app.use("/api", usersRoutes);
-app.use("/api",amigurumisRoutes);
 app.use("/api", designsRoutes);
 
 app.use((req, res, next) => {
