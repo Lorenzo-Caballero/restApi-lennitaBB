@@ -50,7 +50,7 @@ const compressImage = async (image) => {
     }
 };
 
-export const getdesigns = async (req, res) => {
+export const getDesigns = async (req, res) => {
     try {
         const [rows] = await pool.query("SELECT * FROM designs");
 
