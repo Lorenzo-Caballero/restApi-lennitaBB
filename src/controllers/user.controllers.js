@@ -13,7 +13,7 @@ export const createUser = async (req, res) => {
         }
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const [row] = await pool.query("INSERT INTO clientes(name, email,password) VALUES(?, ?, ?)",
+        const [row] = await pool.query("INSERT INTO users(name, email,password) VALUES(?, ?, ?)",
             [name, email, hashedPassword]);
         res.json({
             id_client: row.insertId,
@@ -32,7 +32,7 @@ export const createUser = async (req, res) => {
 
 export const getUser = async (req, res) => {
     try {
-        const [rows] = await pool.query("SELECT * FROM clientes");
+        const [rows] = await pool.query("SELECT * FROM users");
 
         res.json(rows);
     } catch (error) {
@@ -46,7 +46,7 @@ export const getUser = async (req, res) => {
 
 export const getUserById = async (req, res) => {
     try {
-        const [rows] = await pool.query("SELECT * FROM clientes WHERE id = ?", [req.params.id_client]);
+        const [rows] = await pool.query("SELECT * FROM users WHERE id = ?", [req.params.id_client]);
 
         if (rows.length <= 0) {
             return res.status(404).json({
@@ -68,14 +68,14 @@ export const updateUser = async (req, res) => {
         const { id, name, email } = req.body;
 
         // Verificar si el usuario existe antes de actualizar
-        const [existingRows] = await pool.query("SELECT * FROM clientes WHERE id_client = ?", [id]);
+        const [existingRows] = await pool.query("SELECT * FROM users WHERE id_client = ?", [id]);
         if (existingRows.length <= 0) {
             return res.status(404).json({
                 message: "Usuario no encontrado"
             });
         }
         // Actualizar el usuario
-        await pool.query("UPDATE clientes SET name=?, email=?=? WHERE id=?",
+        await pool.query("UPDATE users SET name=?, email=?=? WHERE id=?",
             [name, email, id]);
 
         res.json({
@@ -99,7 +99,7 @@ export const loginUser = async (req, res) => {
                 message: "Los campos email y password son obligatorios"
             });
         }
-        const [rows] = await pool.query("SELECT * FROM clientes WHERE email = ?", [email]);
+        const [rows] = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
 
         if (rows.length === 0) {
             return res.status(404).json({
