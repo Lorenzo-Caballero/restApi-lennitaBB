@@ -1,6 +1,6 @@
 // transactions.routes.js
 import { Router } from "express";
-import { createTransaction, getTransactions, getTransactionsByUser } from "../controllers/transactions.controller.js";
+import { createTransaction, getTransactions, getTransactionsByUser } from "../controllers/transactions.controllers.js";
 const router = Router();
 
 router.post("/transactions", createTransaction);
