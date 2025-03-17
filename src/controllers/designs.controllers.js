@@ -20,9 +20,9 @@ export const createDesigns = async (req, res) => {
 
         res.json({
             id: row.insertId,
-            name,
+            name:name,
             image: compressedImage,
-            price
+            price:price,
         });
     } catch (error) {
         console.log("Error al crear el diseño:", error);
