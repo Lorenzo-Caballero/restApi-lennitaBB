@@ -72,8 +72,13 @@ export const getDesigns = async (req, res) => {
         const [rows] = await pool.query("SELECT * FROM designs");
 
         const designs = rows.map((row) => {
-            if (row.images) {
-                row.images = JSON.parse(row.images); // Convertir la cadena JSON de nuevo a un objeto
+            try {
+                if (row.images && typeof row.images === "string") {
+                    row.images = JSON.parse(row.images); // Convertir solo si es string
+                }
+            } catch (error) {
+                console.error("Error al parsear JSON de images:", error);
+                row.images = null; // Evitar que la app se rompa
             }
             return row;
         });
