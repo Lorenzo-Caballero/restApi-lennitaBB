@@ -1,37 +1,47 @@
-import sharp from 'sharp';
+import multer from "multer";
+import sharp from "sharp";
 import { pool } from "../db.js";
+import fs from "fs";
+
+// Configurar multer para guardar temporalmente la imagen
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 export const createDesigns = async (req, res) => {
     try {
         const { name, price } = req.body;
-        let { image } = req.body;
-
-        if (!name || !price || !image) {
-            return res.status(400).json({
-                message: "Todos los campos son obligatorios!"
-            });
+        if (!name || !price || !req.file) {
+            return res.status(400).json({ message: "Todos los campos son obligatorios!" });
         }
 
-        // Reducir el tamaño de la imagen
-        const compressedImage = await compressImage(image);
-        
-        // Guardar la imagen comprimida en la base de datos
-        const [row] = await pool.query("INSERT INTO designs (name, price, image) VALUES (?, ?, ?)", [name, price, compressedImage]);
+        // Comprimir la imagen usando sharp
+        const compressedImageBuffer = await sharp(req.file.buffer)
+            .jpeg({ quality: 70 })
+            .toBuffer();
+
+        // Convertir la imagen a base64
+        const compressedImage = compressedImageBuffer.toString("base64");
+
+        // Guardar en la base de datos
+        const [row] = await pool.query(
+            "INSERT INTO designs (name, price, image) VALUES (?, ?, ?)",
+            [name, price, compressedImage]
+        );
 
         res.json({
             id: row.insertId,
-            name:name,
+            name,
+            price,
             image: compressedImage,
-            price:price,
         });
     } catch (error) {
         console.log("Error al crear el diseño:", error);
-        res.status(500).json({
-            message: "Error interno del servidor al crear el diseño",
-            error: error.message
-        });
+        res.status(500).json({ message: "Error interno del servidor", error: error.message });
     }
 };
+
+// Middleware para manejar la subida de archivos
+export const uploadMiddleware = upload.single("image");
 
 // Función para comprimir la imagen utilizando sharp
 const compressImage = async (image) => {

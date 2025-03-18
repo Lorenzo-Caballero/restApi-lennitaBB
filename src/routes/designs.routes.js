@@ -1,6 +1,8 @@
 import { Router } from "express";
-import { getDesigns, createDesigns, updateDesigns, deleteDesigns, getDesignsById } from "../controllers/designs.controllers.js";
+import { getDesigns,uploadMiddleware, createDesigns, updateDesigns, deleteDesigns, getDesignsById } from "../controllers/designs.controllers.js";
 const router = Router()
+
+app.post("/api/designs", uploadMiddleware, createDesigns);
 
 router.get("/designs", getDesigns)
 
