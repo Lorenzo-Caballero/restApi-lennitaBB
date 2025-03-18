@@ -19,6 +19,7 @@ app.use("/api", usersRoutes);
 app.use("/api", designsRoutes);
 app.use("/api", designsRoutes);
 app.use("/api",transactionsRoutes);
+app.use(express.urlencoded({ extended: true })); 
 
 app.use((req, res, next) => {
     res.status(404).json({
