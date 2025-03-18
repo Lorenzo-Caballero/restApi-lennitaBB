@@ -45,7 +45,7 @@ export const createDesigns = async (req, res) => {
             id: row.insertId,
             name,
             price,
-            image: imageObject, // Puedes devolver el objeto completo para facilitar la manipulación en el frontend
+            images: imageObject, // Puedes devolver el objeto completo para facilitar la manipulación en el frontend
         });
     } catch (error) {
         console.error("Error al crear el diseño:", error);
@@ -76,8 +76,8 @@ export const getDesigns = async (req, res) => {
 
         // Convertir los datos de la imagen desde JSON a un objeto para facilitar la manipulación
         const designs = rows.map((row) => {
-            if (row.image) {
-                row.image = JSON.parse(row.image); // Convertir la cadena JSON de nuevo a un objeto
+            if (row.images) {
+                row.images = JSON.parse(row.image); // Convertir la cadena JSON de nuevo a un objeto
             }
             return row;
         });
@@ -102,8 +102,8 @@ export const getDesignsById = async (req, res) => {
         }
 
         const design = rows[0];
-        if (design.image) {
-            design.image = JSON.parse(design.image); // Convertir la cadena JSON de nuevo a un objeto
+        if (design.images) {
+            design.images = JSON.parse(design.images); // Convertir la cadena JSON de nuevo a un objeto
         }
 
         res.json(design);
