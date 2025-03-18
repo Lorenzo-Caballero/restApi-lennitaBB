@@ -8,41 +8,41 @@ const upload = multer({ storage });
 
 // Middleware para manejar la subida de imágenes
 export const uploadMiddleware = upload.single("image");
-
 export const createDesigns = async (req, res) => {
     try {
         const { name, price } = req.body;
-        
-        // Verificar que todos los campos estén presentes
-        if (!name || !price || !req.file) {
+        const file = req.file;
+
+        if (!name || !price || !file) {
             return res.status(400).json({ message: "Todos los campos son obligatorios!" });
         }
 
         // Comprimir la imagen con sharp
-        const compressedImageBuffer = await sharp(req.file.buffer)
-            .jpeg({ quality: 70 }) // Reducir la calidad al 70%
+        const compressedImageBuffer = await sharp(file.buffer)
+            .jpeg({ quality: 70 })
             .toBuffer();
 
         // Convertir la imagen comprimida a Base64
-        const compressedImage = compressedImageBuffer.toString("base64");
+        const compressedImageBase64 = compressedImageBuffer.toString("base64");
 
         // Guardar en la base de datos
         const [row] = await pool.query(
             "INSERT INTO designs (name, price, image) VALUES (?, ?, ?)",
-            [name, price, compressedImage]
+            [name, price, compressedImageBase64]
         );
 
         res.json({
             id: row.insertId,
             name,
             price,
-            image: compressedImage,
+            image: compressedImageBase64,
         });
     } catch (error) {
         console.error("Error al crear el diseño:", error);
         res.status(500).json({ message: "Error interno del servidor", error: error.message });
     }
 };
+
 
 // Función para comprimir la imagen utilizando sharp
 const compressImage = async (image) => {
