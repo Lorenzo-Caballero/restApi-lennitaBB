@@ -14,6 +14,7 @@ export const createDesigns = async (req, res) => {
         const { name, price } = req.body;
         const file = req.file;
 
+        // Verificar que los campos no estén vacíos
         if (!name || !price || !file) {
             return res.status(400).json({ message: "Todos los campos son obligatorios!" });
         }
