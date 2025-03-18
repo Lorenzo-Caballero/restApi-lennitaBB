@@ -1,25 +1,29 @@
 import multer from "multer";
 import sharp from "sharp";
 import { pool } from "../db.js";
-import fs from "fs";
 
-// Configurar multer para guardar temporalmente la imagen
+// Configurar multer para almacenar la imagen en memoria
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
+
+// Middleware para manejar la subida de imágenes
+export const uploadMiddleware = upload.single("image");
 
 export const createDesigns = async (req, res) => {
     try {
         const { name, price } = req.body;
+        
+        // Verificar que todos los campos estén presentes
         if (!name || !price || !req.file) {
             return res.status(400).json({ message: "Todos los campos son obligatorios!" });
         }
 
-        // Comprimir la imagen usando sharp
+        // Comprimir la imagen con sharp
         const compressedImageBuffer = await sharp(req.file.buffer)
-            .jpeg({ quality: 70 })
+            .jpeg({ quality: 70 }) // Reducir la calidad al 70%
             .toBuffer();
 
-        // Convertir la imagen a base64
+        // Convertir la imagen comprimida a Base64
         const compressedImage = compressedImageBuffer.toString("base64");
 
         // Guardar en la base de datos
@@ -35,13 +39,10 @@ export const createDesigns = async (req, res) => {
             image: compressedImage,
         });
     } catch (error) {
-        console.log("Error al crear el diseño:", error);
+        console.error("Error al crear el diseño:", error);
         res.status(500).json({ message: "Error interno del servidor", error: error.message });
     }
 };
-
-// Middleware para manejar la subida de archivos
-export const uploadMiddleware = upload.single("image");
 
 // Función para comprimir la imagen utilizando sharp
 const compressImage = async (image) => {
