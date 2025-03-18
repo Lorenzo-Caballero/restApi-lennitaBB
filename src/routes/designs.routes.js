@@ -1,17 +1,23 @@
 import { Router } from "express";
-import { getDesigns,uploadMiddleware, createDesigns, updateDesigns, deleteDesigns, getDesignsById } from "../controllers/designs.controllers.js";
-const router = Router()
+import {
+    getDesigns,
+    uploadMiddleware,
+    createDesigns,
+    updateDesigns,
+    deleteDesigns,
+    getDesignsById
+} from "../controllers/designs.controllers.js";
 
-router.get("/designs", getDesigns)
+const router = Router();
 
-router.get("/designs/:id", getDesignsById)
+router.get("/designs", getDesigns);
 
+router.get("/designs/:id", getDesignsById);
 
-router.post("/designs", createDesigns,uploadMiddleware)
+router.post("/designs", uploadMiddleware, createDesigns);
 
-router.put("/designs/:id", updateDesigns)
+router.put("/designs/:id", updateDesigns);
 
-router.delete("/designs/:id", deleteDesigns)
-
+router.delete("/designs/:id", deleteDesigns);
 
 export default router;

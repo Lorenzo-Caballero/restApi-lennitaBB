@@ -2,19 +2,36 @@ import multer from "multer";
 import sharp from "sharp";
 import { pool } from "../db.js";
 
-// Configurar multer para almacenar la imagen en memoria
+// Configuración de multer para almacenar la imagen en memoria
 const storage = multer.memoryStorage();
-const upload = multer({ storage });
+const upload = multer({ 
+    storage,
+    fileFilter: (req, file, cb) => {
+        // Acepta solo imágenes
+        if (!file.mimetype.startsWith("image/")) {
+            return cb(new Error("Solo se permiten imágenes"));
+        }
+        cb(null, true);
+    }
+});
 
 // Middleware para manejar la subida de imágenes
-export const uploadMiddleware = upload.single("image");
+export const uploadMiddleware = (req, res, next) => {
+    upload.single("image")(req, res, (err) => {
+        if (err instanceof multer.MulterError) {
+            return res.status(500).json({ message: "Error en la carga del archivo", error: err.message });
+        } else if (err) {
+            return res.status(500).json({ message: "Error desconocido", error: err.message });
+        }
+        next();
+    });
+};
 
 export const createDesigns = async (req, res) => {
     try {
         const { name, price } = req.body;
         const file = req.file;
 
-        // Verificar que los campos no estén vacíos
         if (!name || !price || !file) {
             return res.status(400).json({ message: "Todos los campos son obligatorios!" });
         }
@@ -24,28 +41,25 @@ export const createDesigns = async (req, res) => {
             .jpeg({ quality: 70 })
             .toBuffer();
 
-        // Convertir la imagen comprimida a Base64
         const compressedImageBase64 = compressedImageBuffer.toString("base64");
 
-        // Crear el objeto JSON para almacenar la imagen
         const imageObject = {
             fileName: file.originalname,
             contentType: file.mimetype,
             size: file.size,
-            data: compressedImageBase64, // Almacenar la imagen como base64 dentro del objeto
+            data: compressedImageBase64,
         };
 
-        // Guardar en la base de datos (asegurate de que el campo 'image' sea de tipo JSON)
         const [row] = await pool.query(
             "INSERT INTO designs (name, price, images) VALUES (?, ?, ?)",
-            [name, price, JSON.stringify(imageObject)] // Convertir el objeto JSON a cadena antes de guardarlo
+            [name, price, JSON.stringify(imageObject)]
         );
 
         res.json({
             id: row.insertId,
             name,
             price,
-            images: imageObject, // Puedes devolver el objeto completo para facilitar la manipulación en el frontend
+            images: imageObject,
         });
     } catch (error) {
         console.error("Error al crear el diseño:", error);
@@ -53,31 +67,13 @@ export const createDesigns = async (req, res) => {
     }
 };
 
-// Función para comprimir la imagen utilizando sharp
-const compressImage = async (image) => {
-    try {
-        // Procesar la imagen con sharp y reducir la calidad
-        const compressedImageBuffer = await sharp(Buffer.from(image, 'base64'))
-            .jpeg({ quality: 70 }) // Reducir la calidad al 70%
-            .toBuffer();
-
-        // Convertir la imagen comprimida a una cadena base64
-        const compressedImage = compressedImageBuffer.toString('base64');
-
-        return compressedImage;
-    } catch (error) {
-        throw new Error("Error al comprimir la imagen");
-    }
-};
-
 export const getDesigns = async (req, res) => {
     try {
         const [rows] = await pool.query("SELECT * FROM designs");
 
-        // Convertir los datos de la imagen desde JSON a un objeto para facilitar la manipulación
         const designs = rows.map((row) => {
             if (row.images) {
-                row.images = JSON.parse(row.image); // Convertir la cadena JSON de nuevo a un objeto
+                row.images = JSON.parse(row.images); // Convertir la cadena JSON de nuevo a un objeto
             }
             return row;
         });
@@ -96,14 +92,12 @@ export const getDesignsById = async (req, res) => {
         const [rows] = await pool.query("SELECT * FROM designs WHERE id = ?", [req.params.id]);
 
         if (rows.length <= 0) {
-            return res.status(404).json({
-                message: "designs no encontrado"
-            });
+            return res.status(404).json({ message: "designs no encontrado" });
         }
 
         const design = rows[0];
         if (design.images) {
-            design.images = JSON.parse(design.images); // Convertir la cadena JSON de nuevo a un objeto
+            design.images = JSON.parse(design.images);
         }
 
         res.json(design);
@@ -119,7 +113,6 @@ export const updateDesigns = async (req, res) => {
     try {
         const { id, name, price, image } = req.body;
 
-        // Verificar si el design existe antes de actualizar
         const [existingRows] = await pool.query("SELECT * FROM designs WHERE id = ?", [id]);
         if (existingRows.length <= 0) {
             return res.status(404).json({
@@ -127,13 +120,11 @@ export const updateDesigns = async (req, res) => {
             });
         }
 
-        // Convertir la imagen recibida a JSON (si está presente)
         let updatedImage = image;
         if (updatedImage && typeof updatedImage === "string") {
             updatedImage = JSON.parse(updatedImage); // Si es cadena JSON, convertirlo a objeto
         }
 
-        // Actualizar el diseño
         await pool.query("UPDATE designs SET name=?, price=?, images=? WHERE id=?",
             [name, price, updatedImage ? JSON.stringify(updatedImage) : null, id]);
 
@@ -157,7 +148,7 @@ export const deleteDesigns = async (req, res) => {
                 message: "designs no encontrado"
             });
         }
-        // Eliminar el diseño
+
         await pool.query("DELETE FROM designs WHERE id = ?", [designsId]);
         res.json({
             message: "designs eliminado correctamente"
