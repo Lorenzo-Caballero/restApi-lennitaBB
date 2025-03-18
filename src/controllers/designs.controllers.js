@@ -36,7 +36,7 @@ export const createDesigns = async (req, res) => {
 
         // Guardar en la base de datos (asegurate de que el campo 'image' sea de tipo JSON)
         const [row] = await pool.query(
-            "INSERT INTO designs (name, price, image) VALUES (?, ?, ?)",
+            "INSERT INTO designs (name, price, images) VALUES (?, ?, ?)",
             [name, price, JSON.stringify(imageObject)] // Convertir el objeto JSON a cadena antes de guardarlo
         );
 
@@ -133,7 +133,7 @@ export const updateDesigns = async (req, res) => {
         }
 
         // Actualizar el diseño
-        await pool.query("UPDATE designs SET name=?, price=?, image=? WHERE id=?",
+        await pool.query("UPDATE designs SET name=?, price=?, images=? WHERE id=?",
             [name, price, updatedImage ? JSON.stringify(updatedImage) : null, id]);
 
         res.json({
